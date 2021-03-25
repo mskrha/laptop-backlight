@@ -1,0 +1,19 @@
+stages:
+  - package
+
+amd64:
+ stage: package
+ tags:
+  - debian
+  - amd64
+ only:
+  - tags
+ script:
+  - export BUILD=laptop-backlight
+  - export VERSION=${CI_BUILD_TAG}
+  - export ARCH=amd64
+  - export PKG=${BUILD}_${VERSION}_${ARCH}
+  - cd source
+  - make deb
+  - /usr/sbin/reprepro-uploader ${PKG}.deb jessie stretch buster
+  - rm -fv ${PKG}.deb
